@@ -31,7 +31,7 @@ class UserService {
         const userId = uuidv4()
         const date = new Date()
 
-        const user_hash = await bcrypt.hash(`${botId}:${chatId}:${process.env.SECRET_KEY}`, 3);
+        const user_hash = await bcrypt.hash(`${botId}:${chatId}:${process.env.SECRET_KEY}`, 3)
 
         const isPbUser = await pbService.buyerInfo(botId, phone)
 
@@ -41,7 +41,8 @@ class UserService {
         return newUser.rows[0].is_pb_user
     }
 
-    async getUserData(candidate) {
+    async getUserData(data) {
+        const { botId, chatId } = data
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
@@ -50,7 +51,13 @@ class UserService {
             throw new Error('Пользователь не найде')
         }
 
-        //const access = await bcrypt.compare(password, user.password);
+        const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
+
+        if(!access) {
+            throw new Error('Доступ запрещён')
+        }
+
+        return await pbService.buyerInfo(botId, phone)
     }
 }
 
