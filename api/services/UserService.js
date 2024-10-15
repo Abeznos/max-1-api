@@ -5,21 +5,29 @@ const bcrypt = require('bcrypt')
 const pbService = require('./PbService')
 
 class UserService {
-    async findBotUser(data) {
-        const { chatId, botId } = data
-
-        const user = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-        [botId, chatId])
-
-        if(!user.rows[0]) {
-            return await this.createBotUser(data)
-        } else {
-            return user.rows[0]
-        }
-    }
+    //async findBotUser(data) {
+    //    const { chatId, botId } = data
+//
+    //    const user = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+    //    [botId, chatId])
+//
+    //    if(!user.rows[0]) {
+    //        return await this.createBotUser(data)
+    //    } else {
+    //        return user.rows[0]
+    //    }
+    //}
 
     async createBotUser(data) {
         const { phone, chatId, botId, isPhoneVerified } = data
+
+        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
+
+        if(candidate.rows[0]) {
+            return candidate.rows[0].is_pb_user
+        }
+
         const userId = uuidv4()
         const date = new Date()
 
@@ -35,10 +43,11 @@ class UserService {
 
     async getUserData(candidate) {
 
-        const isUser = await this.findBotUsers(candidate)
+        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
 
-        if(isUser) {
-
+        if(!candidate.rows[0]) {
+            throw new Error('Пользователь не найде')
         }
 
         //const access = await bcrypt.compare(password, user.password);
