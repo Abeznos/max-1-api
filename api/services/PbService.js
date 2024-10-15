@@ -12,7 +12,7 @@ pb_api.interceptors.request.use((config) => {
 })
 
 class PbService {
-    async buyerInfo(botId, phone) {
+    async checkUser(botId, phone) {
 
         //const api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
 //
@@ -30,6 +30,30 @@ class PbService {
                 }
             )
             return response.data.is_registered
+        } catch(error) {
+            console.log(error);
+            throw new Error('Ошибка при получении информации о покупателе')
+        }
+    }
+
+    async buyerInfo(botId, phone) {
+
+        //const api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
+//
+        //if(!api_token.rows[0]) {
+        //    throw new Error('Нет токена для компании')
+        //}
+
+        try {
+            const response = await pb_api.post(`/buyer-info`,
+                {
+                    identificator: phone
+                },
+                {
+                    headers: {Authorization: 'test_vk_smartbotpro:97792784753c10b5423296cbba2e6ec9' }//api_token.rows[0].pb_token}
+                }
+            )
+            return response.data
         } catch(error) {
             console.log(error);
             throw new Error('Ошибка при получении информации о покупателе')

@@ -33,7 +33,7 @@ class UserService {
 
         const user_hash = await bcrypt.hash(`${botId}:${chatId}:${process.env.SECRET_KEY}`, 3)
 
-        const isPbUser = await pbService.buyerInfo(botId, phone)
+        const isPbUser = await pbService.checkUser(botId, phone)
 
         const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, user_hash, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
         [userId, phone, chatId, isPhoneVerified, user_hash, isPbUser, botId, date])
@@ -57,7 +57,7 @@ class UserService {
             throw new Error('Доступ запрещён')
         }
 
-        return await pbService.buyerInfo(botId, phone)
+        return await pbService.buyerInfo(botId, candidate.rows[0].phone)
     }
 }
 
