@@ -6,15 +6,15 @@ const pbService = require('./PbService')
 
 class UserService {
     async findBotUser(data) {
-        const { phone, chatId, botId } = data
+        const { chatId, botId } = data
 
-        const user = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND phone = $2 AND chat_id = $3',
-        [botId, phone, chatId])
+        const user = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
 
         if(!user.rows[0]) {
             return await this.createBotUser(data)
         } else {
-            return user.rows[0].is_pb_user
+            return user.rows[0]
         }
     }
 
@@ -31,6 +31,17 @@ class UserService {
         [userId, phone, chatId, isPhoneVerified, user_hash, isPbUser, botId, date])
 
         return newUser.rows[0].is_pb_user
+    }
+
+    async getUserData(candidate) {
+
+        const isUser = await this.findBotUsers(candidate)
+
+        if(isUser) {
+
+        }
+
+        //const access = await bcrypt.compare(password, user.password);
     }
 }
 

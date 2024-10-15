@@ -10,6 +10,15 @@ class UserController {
             response.status(500).json(error.message)
         }
     }
+
+    async getUserData (request, response) {
+        try {
+            const data = await userService.getUserData(request.body)
+            return response.status(200).json(data)
+        } catch(error) {
+            response.status(500).json(error.message)
+        }
+    }
 }
 
 module.exports = new UserController()
