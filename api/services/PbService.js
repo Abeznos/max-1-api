@@ -12,11 +12,9 @@ pb_api.interceptors.request.use((config) => {
 })
 
 class PbService {
-    async checkUser(botId, phone) {
+    async checkUser(token, phone) {
 
-        //const api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
-//
-        //if(!api_token.rows[0]) {
+        //if(!token) {
         //    throw new Error('Нет токена для компании')
         //}
 
@@ -26,7 +24,7 @@ class PbService {
                     identificator: phone
                 },
                 {
-                    headers: {Authorization: 'test_vk_smartbotpro:97792784753c10b5423296cbba2e6ec9' }//api_token.rows[0].pb_token}
+                    headers: {Authorization: token }//api_token.rows[0].pb_token}
                 }
             )
             return response.data.is_registered
@@ -36,11 +34,9 @@ class PbService {
         }
     }
 
-    async buyerInfo(botId, phone) {
+    async buyerInfo(token, phone) {
 
-        //const api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
-//
-        //if(!api_token.rows[0]) {
+        //if(!token) {
         //    throw new Error('Нет токена для компании')
         //}
 
@@ -50,7 +46,7 @@ class PbService {
                     identificator: phone
                 },
                 {
-                    headers: {Authorization: 'test_vk_smartbotpro:97792784753c10b5423296cbba2e6ec9' }//api_token.rows[0].pb_token}
+                    headers: {Authorization: token }
                 }
             )
             return response.data

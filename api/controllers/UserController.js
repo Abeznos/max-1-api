@@ -13,7 +13,7 @@ class UserController {
 
     async getUserData (request, response) {
         try {
-            const data = await userService.getUserData(request.body)
+            const data = await userService.getUserData(request.body, request.headers)
             return response.status(200).json(data)
         } catch(error) {
             response.status(500).json(error.message)
