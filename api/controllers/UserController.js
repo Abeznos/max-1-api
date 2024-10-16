@@ -4,7 +4,7 @@ const userService = require('../services/UserService')
 class UserController {
     async createBotUser(request, response) {
         try {
-            const user = await userService.createBotUser(request.body)
+            const user = await userService.createBotUser(request.body, request.headers)
             return response.status(201).json(user)
         } catch(error) {
             response.status(500).json(error.message)

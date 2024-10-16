@@ -18,8 +18,14 @@ class UserService {
     //    }
     //}
 
-    async createBotUser(data) {
-        const { phone, chatId, botId, isPhoneVerified } = data
+    async createBotUser(body, headers) {
+        const token = headers.authorization
+
+        if(!token || token !== process.env.BOT_TOKEN) {
+            throw Error('Доступ запрещен')
+        }
+        
+        const { phone, chatId, botId, isPhoneVerified } = body
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
