@@ -54,24 +54,24 @@ class UserService {
         if(!token || token !== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
         }        
-        //const { botId, chatId } = body
-//
-        //const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-        //[botId, chatId])
-//
-        //if(!candidate.rows[0]) {
-        //    throw new Error('Пользователь не найден')
-        //}
-//
-        //const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
-//
-        //if(!access) {
-        //    throw new Error('Доступ запрещён')
-        //}
-//
-        const pb_api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
-//
-        //return await pbService.buyerInfo(api_token.rows[0].token, candidate.rows[0].phone)
+        const { botId, chatId } = body
+
+        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
+
+        if(!candidate.rows[0]) {
+            throw new Error('Пользователь не найден')
+        }
+
+        const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
+
+        if(!access) {
+            throw new Error('Доступ запрещён')
+        }
+
+        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+
+        return await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
     }
 }
 
