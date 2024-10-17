@@ -1,6 +1,7 @@
 const db = require('../db')
 const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
+const QRCode = require('qrcode')
 
 const pbService = require('./PbService')
 
@@ -24,7 +25,7 @@ class UserService {
         if(!token || token !== process.env.BOT_TOKEN) {
             throw Error('Доступ запрещен')
         }
-        
+
         const { phone, chatId, botId, isPhoneVerified } = body
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
@@ -53,7 +54,7 @@ class UserService {
 
         if(!token || token !== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
-        }        
+        }
         const { botId, chatId } = body
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
@@ -71,7 +72,15 @@ class UserService {
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
 
-        return await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
+
+        return { ...buyerInfo, ...buyerOrderCode, qr: qr }
+    }
+
+    async generateOrderCodeQr(code) {
+        return await QRCode.toString(code,{type:'svg'})
     }
 }
 

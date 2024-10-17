@@ -13,11 +13,6 @@ pb_api.interceptors.request.use((config) => {
 
 class PbService {
     async checkUser(token, phone) {
-
-        //if(!token) {
-        //    throw new Error('Нет токена для компании')
-        //}
-
         try {
             const response = await pb_api.post(`/buyer-info`,
                 {
@@ -35,13 +30,42 @@ class PbService {
     }
 
     async buyerInfo(token, phone) {
-
-        //if(!token) {
-        //    throw new Error('Нет токена для компании')
-        //}
-
         try {
             const response = await pb_api.post(`/buyer-info`,
+                {
+                    identificator: phone
+                },
+                {
+                    headers: {Authorization: token }
+                }
+            )
+            return response.data
+        } catch(error) {
+            console.log(error);
+            throw new Error('Ошибка при получении информации о покупателе')
+        }
+    }
+
+    async buyerOrderCode(token, phone) {
+        try {
+            const response = await pb_api.post(`/generate-order-code`,
+                {
+                    phone: phone
+                },
+                {
+                    headers: {Authorization: token }
+                }
+            )
+            return response.data
+        } catch(error) {
+            console.log(error);
+            throw new Error('Ошибка при получении информации о покупателе')
+        }
+    }
+
+    async getMlmCOde(token, phone) {
+        try {
+            const response = await pb_api.post(`/buyer-invite-code`,
                 {
                     identificator: phone
                 },
