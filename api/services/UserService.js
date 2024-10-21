@@ -19,7 +19,6 @@ class UserService {
     //}
 
     async createBotUser(body, headers) {
-        console.log('user')
         console.log(body)
 
         const token = headers.authorization
@@ -27,15 +26,14 @@ class UserService {
         if(!token || token !== process.env.BOT_TOKEN) {
             throw Error('Доступ запрещен')
         }
-        console.log(token)
 
         const { phone, chatId, botId, isPhoneVerified } = body
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
-        if(candidate.rows[0] > 0) {
-            console.log(candidate.rows[0].is_pb_user)
+        if(candidate.rows[0]) {
+            console.log(candidate.rows[0])
             return candidate.rows[0].is_pb_user
         }
 
