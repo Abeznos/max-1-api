@@ -60,23 +60,17 @@ class UserService {
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
-        if(!candidate.rows[0]) {
-            throw new Error('Пользователь не найден')
+        if(!candidate.rows[0] || !candidate.rows[0].phone) {
+            return { success: false }
         }
 
-        //const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
+        //const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
 //
-        //if(!access) {
-        //    throw new Error('Доступ запрещён')
-        //}
-
-        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
-
-        const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-        const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-        const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
-
-        return { ...buyerInfo, ...buyerOrderCode, qr: qr }
+        //const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        //const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
+//
+        //return { ...buyerInfo, ...buyerOrderCode, qr: qr }
     }
 
     async generateOrderCodeQr(code) {
