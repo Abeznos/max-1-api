@@ -11,10 +11,19 @@ class UserController {
         }
     }
 
-    async getUserData (request, response) {
+    async getUserData(request, response) {
         try {
             const data = await userService.getUserData(request.body, request.headers)
             return response.status(200).json(data)
+        } catch(error) {
+            response.status(500).json(error.message)
+        }
+    }
+
+    async userRegistration(request, response) {
+        try {
+            const newUser = await userService.userRegistration(request.body, request.headers)
+            return response.status(200).json(newUser)
         } catch(error) {
             response.status(500).json(error.message)
         }

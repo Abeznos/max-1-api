@@ -79,6 +79,22 @@ class PbService {
             throw new Error('Ошибка при получении информации о покупателе')
         }
     }
+
+    async buyerRegister(token, user) {
+        
+       //try {
+       //    const response = await pb_api.post(`/buyer-register`, user,
+       //        {
+       //            headers: {Authorization: token }
+       //        }
+       //    )
+       //    console.log(response.data)
+       //    return response.data
+       //} catch(error) {
+       //    console.log(error);
+       //    throw new Error('Ошибка при регистрации покупателя')
+       //}
+    }
 }
 
 module.exports = new PbService()

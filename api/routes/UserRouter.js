@@ -5,6 +5,7 @@ const userController = require('../controllers/UserController')
 //router.get('/:id', userController.findUser)
 router.post('/', userController.createBotUser)
 router.post('/login', userController.getUserData)
+router.post('/registration', userController.userRegistration)
 
 
 module.exports = router

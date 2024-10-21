@@ -64,11 +64,11 @@ class UserService {
             throw new Error('Пользователь не найден')
         }
 
-        const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
-
-        if(!access) {
-            throw new Error('Доступ запрещён')
-        }
+        //const access = await bcrypt.compare(`${botId}:${chatId}:${process.env.SECRET_KEY}`, candidate.rows[0].user_hash)
+//
+        //if(!access) {
+        //    throw new Error('Доступ запрещён')
+        //}
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
 
@@ -81,6 +81,27 @@ class UserService {
 
     async generateOrderCodeQr(code) {
         return await QRCode.toString(code,{type:'svg'})
+    }
+
+    async userRegistration(body, headers) {
+        const token = headers.authorization.split(' ')[1]
+
+        if(!token || token!== process.env.APP_TOKEN) {
+            throw Error('Доступ запрещен')
+        }
+
+        const { botId, chatId } = body
+
+        const candidate = await db.query('SELECT phone FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
+
+        const userData = {...body.formData, phone: candidate.rows[0]}
+
+        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
+
+        const pbNewBuyer = await pbService.buyerRegister(pb_api_token.rows[0], userData)
+
+        console.log(candidate.rows[0])
     }
 }
 
