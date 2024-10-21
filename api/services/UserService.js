@@ -42,7 +42,7 @@ class UserService {
         const userId = uuidv4()
         const date = new Date()
 
-        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
+        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const isPbUser = await pbService.checkUser(pb_api_token.rows[0].token, phone)
 
         const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
