@@ -1,9 +1,11 @@
 const db = require('../db')
 const axios = require('axios').default
+const https = require('node:https');
 
 const pb_api = axios.create({
+    httpsAgent: new https.Agent({ keepAlive: true, rejectUnauthorized: false }),
     withCredentials: true,
-    baseURL: process.env.PB_API
+    baseURL: process.env.PB_API,
 })
 
 pb_api.interceptors.request.use((config) => {
@@ -81,19 +83,19 @@ class PbService {
     }
 
     async buyerRegister(token, user) {
-        
-       //try {
-       //    const response = await pb_api.post(`/buyer-register`, user,
-       //        {
-       //            headers: {Authorization: token }
-       //        }
-       //    )
-       //    console.log(response.data)
-       //    return response.data
-       //} catch(error) {
-       //    console.log(error);
-       //    throw new Error('Ошибка при регистрации покупателя')
-       //}
+        console.log(token, user)
+       try {
+           const response = await pb_api.post(`/buyer-register`, user,
+               {
+                   headers: {Authorization: token }
+               }
+           )
+           console.log(response.data)
+           return response.data
+       } catch(error) {
+           console.log(error);
+           throw new Error('Ошибка при регистрации покупателя')
+       }
     }
 }
 

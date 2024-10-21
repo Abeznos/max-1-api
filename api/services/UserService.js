@@ -1,6 +1,5 @@
 const db = require('../db')
 const { v4: uuidv4 } = require('uuid')
-const bcrypt = require('bcrypt')
 const QRCode = require('qrcode')
 
 const pbService = require('./PbService')
@@ -20,31 +19,34 @@ class UserService {
     //}
 
     async createBotUser(body, headers) {
+        console.log('user')
+        console.log(body)
+
         const token = headers.authorization
 
         if(!token || token !== process.env.BOT_TOKEN) {
             throw Error('Доступ запрещен')
         }
+        console.log(token)
 
         const { phone, chatId, botId, isPhoneVerified } = body
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
-        if(candidate.rows[0]) {
+        if(candidate.rows[0] > 0) {
+            console.log(candidate.rows[0].is_pb_user)
             return candidate.rows[0].is_pb_user
         }
 
         const userId = uuidv4()
         const date = new Date()
 
-        const user_hash = await bcrypt.hash(`${botId}:${chatId}:${process.env.SECRET_KEY}`, 3)
+        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
+        const isPbUser = await pbService.checkUser(pb_api_token.rows[0].token, phone)
 
-        const pb_api_token = await db.query('SELECT * FROM tokens WHERE bot_id = $1', [botId])
-        const isPbUser = await pbService.checkUser(api_token.rows[0].token, phone)
-
-        const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, user_hash, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-        [userId, phone, chatId, isPhoneVerified, user_hash, isPbUser, botId, date])
+        const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [userId, phone, chatId, isPhoneVerified, isPbUser, botId, date])
 
         return newUser.rows[0].is_pb_user
     }
@@ -70,7 +72,7 @@ class UserService {
         //    throw new Error('Доступ запрещён')
         //}
 
-        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
 
         const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
@@ -84,24 +86,28 @@ class UserService {
     }
 
     async userRegistration(body, headers) {
+        console.log(body)
         const token = headers.authorization.split(' ')[1]
-
+//
         if(!token || token!== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
         }
 
         const { botId, chatId } = body
 
-        const candidate = await db.query('SELECT phone FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
+        const phone = candidate.rows[0].phone
+        console.log(phone)
 
-        const userData = {...body.formData, phone: candidate.rows[0]}
+        const userData = {...body.formData, phone}
+        console.log(userData)
 
-        const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
+        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
 
-        const pbNewBuyer = await pbService.buyerRegister(pb_api_token.rows[0], userData)
+        const pbNewBuyer = await pbService.buyerRegister(pb_api_token.rows[0].pb_token, userData)
 
-        console.log(candidate.rows[0])
+        return pbNewBuyer
     }
 }
 
