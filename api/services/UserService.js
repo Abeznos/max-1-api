@@ -51,22 +51,30 @@ class UserService {
 
     async getUserData(body, headers) {
         const token = headers.authorization.split(' ')[1]
-
+        console.log(body)
         if(!token || token !== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
         }
         const { botId, chatId } = body
+        console.log(botId, chatId)
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
+
+        console.log(candidate.rows[0])
         if(!candidate.rows[0] || !candidate.rows[0].phone) {
-            return { success: false }
+            return { isBotUser: false }
         }
 
-        //const pb_api_token = await db.query('SELECT pb_token FROM bots WHERE bot_id = $1', [botId])
-//
-        //const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        if(!candidate.rows[0].is_pb_user) {
+            return { isPbUser: false }
+
+        }
+
+        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+
         //const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
         //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
 //
