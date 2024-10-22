@@ -32,8 +32,7 @@ class UserService {
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
-        if(candidate.rows[0]) {
-            console.log(candidate.rows[0])
+        if (candidate.rows[0]) {
             return candidate.rows[0].is_pb_user
         }
 
@@ -41,10 +40,16 @@ class UserService {
         const date = new Date()
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
-        const isPbUser = await pbService.checkUser(pb_api_token.rows[0].token, phone)
-        console.log(isPbUser.rows[0])
+        console.log(pb_api_token.rows[0])
+
+        if (!pb_api_token.rows[0].pb_token) {
+            throw Error('Ошибка')
+        }
+
+        const pbResponse = await pbService.checkUser(pb_api_token.rows[0].pb_token, phone)
+
         const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [userId, phone, chatId, isPhoneVerified, isPbUser, botId, date])
+        [userId, phone, chatId, isPhoneVerified, pbResponse, botId, date])
 
         return newUser.rows[0].is_pb_user
     }
@@ -125,8 +130,8 @@ class UserService {
         console.log(phone)
 
         const userData = {...body.formData, phone}
-        console.log(userData)        
-        
+        console.log(userData)
+
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const updatedBuyer = await pbService.updateBuyer(pb_api_token.rows[0].pb_token, userData)
 

@@ -21,7 +21,7 @@ class PbService {
                     identificator: phone
                 },
                 {
-                    headers: {Authorization: token }//api_token.rows[0].pb_token}
+                    headers: {Authorization: token }
                 }
             )
             return response.data.is_registered
@@ -111,7 +111,7 @@ class PbService {
         } catch(error) {
             console.log(error);
             throw new Error('Ошибка при обновлении покупателя')
-        }        
+        }
     }
 
     async sendTrigger(token, user, trigger) {
@@ -127,7 +127,7 @@ class PbService {
         //} catch(error) {
         //    console.log(error);
         //    throw new Error('Ошибка отпраки триггера')
-        //}          
+        //}
     }
 }
 
