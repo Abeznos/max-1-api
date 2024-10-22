@@ -42,7 +42,7 @@ class UserService {
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const isPbUser = await pbService.checkUser(pb_api_token.rows[0].token, phone)
-
+        console.log(isPbUser.rows[0])
         const newUser = await db.query('INSERT INTO bot_users (user_id, phone, chat_id, is_phone_verified, is_pb_user, bot_id, created_date) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
         [userId, phone, chatId, isPhoneVerified, isPbUser, botId, date])
 
@@ -69,16 +69,15 @@ class UserService {
 
         if(!candidate.rows[0].is_pb_user) {
             return { isPbUser: false }
-
         }
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
 
-        //const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-        //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
-//
-        //return { ...buyerInfo, ...buyerOrderCode, qr: qr }
+        const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
+
+        return { ...buyerInfo, ...buyerOrderCode, qr: qr }
     }
 
     async generateOrderCodeQr(code) {
@@ -88,7 +87,7 @@ class UserService {
     async userRegistration(body, headers) {
         console.log(body)
         const token = headers.authorization.split(' ')[1]
-//
+
         if(!token || token!== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
         }
