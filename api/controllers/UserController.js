@@ -28,6 +28,16 @@ class UserController {
             response.status(500).json(error.message)
         }
     }
+
+    async updateUserIportantDates(request, response) {
+        try {
+            const newUser = await userService.updateUserIportantDates(request.body, request.headers)
+            return response.status(200).json(newUser)
+        } catch(error) {
+            response.status(500).json(error.message)
+        }
+    }
+    
 }
 
 module.exports = new UserController()

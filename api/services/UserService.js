@@ -108,6 +108,30 @@ class UserService {
 
         return pbNewBuyer
     }
+
+    async updateUserIportantDates(body, headers) {
+        console.log(body)
+        const token = headers.authorization.split(' ')[1]
+
+        if(!token || token!== process.env.APP_TOKEN) {
+            throw Error('Доступ запрещен')
+        }
+
+        const { botId, chatId } = body
+
+        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        [botId, chatId])
+        const phone = candidate.rows[0].phone
+        console.log(phone)
+
+        const userData = {...body.formData, phone}
+        console.log(userData)        
+        
+        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        const updatedBuyer = await pbService.updateBuyer(pb_api_token.rows[0].pb_token, userData)
+
+        return updatedBuyer
+    }
 }
 
 module.exports = new UserService()
