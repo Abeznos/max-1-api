@@ -113,6 +113,22 @@ class PbService {
             throw new Error('Ошибка при обновлении покупателя')
         }        
     }
+
+    async sendTrigger(token, user, trigger) {
+        console.log(token, user, trigger)
+        //try {
+        //    const response = await pb_api.post(`/trigger`, {user, trigger},
+        //        {
+        //            headers: {Authorization: token }
+        //        }
+        //    )
+        //    console.log(response.data)
+        //    return response.data
+        //} catch(error) {
+        //    console.log(error);
+        //    throw new Error('Ошибка отпраки триггера')
+        //}          
+    }
 }
 
 module.exports = new PbService()
