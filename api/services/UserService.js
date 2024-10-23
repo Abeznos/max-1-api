@@ -111,6 +111,9 @@ class UserService {
 
         const pbNewBuyer = await pbService.buyerRegister(pb_api_token.rows[0].pb_token, userData)
 
+        const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3',
+        [true, botId, chatId])
+
         return pbNewBuyer
     }
 
