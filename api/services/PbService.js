@@ -115,19 +115,18 @@ class PbService {
     }
 
     async sendTrigger(token, user, trigger) {
-        console.log(token, user, trigger)
-        //try {
-        //    const response = await pb_api.post(`/trigger`, {user, trigger},
-        //        {
-        //            headers: {Authorization: token }
-        //        }
-        //    )
-        //    console.log(response.data)
-        //    return response.data
-        //} catch(error) {
-        //    console.log(error);
-        //    throw new Error('Ошибка отпраки триггера')
-        //}
+        try {
+            const response = await pb_api.post(`/trigger`, {user, trigger},
+                {
+                    headers: {Authorization: token }
+                }
+            )
+            console.log(response.data)
+            return response.data
+        } catch(error) {
+            console.log(error);
+            throw new Error('Ошибка отпраки триггера')
+        }
     }
 }
 
