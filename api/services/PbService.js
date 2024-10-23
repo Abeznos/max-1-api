@@ -83,14 +83,12 @@ class PbService {
     }
 
     async buyerRegister(token, user) {
-        console.log(token, user)
        try {
            const response = await pb_api.post(`/buyer-register`, user,
                {
                    headers: {Authorization: token }
                }
            )
-           console.log(response.data)
            return response.data
        } catch(error) {
            console.log(error);
@@ -99,7 +97,6 @@ class PbService {
     }
 
     async updateBuyer(token, user) {
-        console.log(token, user)
         try {
             const response = await pb_api.post(`/buyer-edit`, user,
                 {
@@ -113,15 +110,16 @@ class PbService {
             throw new Error('Ошибка при обновлении покупателя')
         }
     }
-
     async sendTrigger(token, user, trigger) {
         try {
-            const response = await pb_api.post(`/trigger`, {user, trigger},
+            const response = await pb_api.post(`/trigger`, {
+                    phone: user, 
+                    event_name: trigger
+                },
                 {
                     headers: {Authorization: token }
                 }
             )
-            console.log(response.data)
             return response.data
         } catch(error) {
             console.log(error);

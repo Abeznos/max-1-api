@@ -56,18 +56,14 @@ class UserService {
 
     async getUserData(body, headers) {
         const token = headers.authorization.split(' ')[1]
-        console.log(body)
         if(!token || token !== process.env.APP_TOKEN) {
             throw Error('Доступ запрещен')
         }
         const { botId, chatId } = body
-        console.log(botId, chatId)
 
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
-
-        console.log(candidate.rows[0])
         if(!candidate.rows[0] || !candidate.rows[0].phone) {
             return { isBotUser: false }
         }
@@ -90,7 +86,6 @@ class UserService {
     }
 
     async userRegistration(body, headers) {
-        //console.log(body)
         const token = headers.authorization.split(' ')[1]
 
         if(!token || token!== process.env.APP_TOKEN) {
@@ -102,23 +97,32 @@ class UserService {
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
         const phone = candidate.rows[0].phone
-        //console.log(phone)
 
         const userData = {...body.formData, phone}
-        //console.log(userData)
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        console.log('bot')
+        console.log(bot.rows[0])
 
         const pbNewBuyer = await pbService.buyerRegister(bot.rows[0].pb_token, userData)
+        console.log('pbNewBuyer')
+        console.log(pbNewBuyer)
 
-        if(pbNewBuyer.is_register) {
-            const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3',
+        if(pbNewBuyer.is_registered) {
+            const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3 RETURNING *',
             [true, botId, chatId])
+            console.log('is_pb_user')
+            console.log(is_pb_user.rows[0])
         }
 
-        if(bot.registrations_trigger) {
-            const trigger = await pbService.sendTrigger(bot.rows[0].pb_token, chatId, bot.registrations_trigger)
+        console.log('bot.registrations_trigger')
+        console.log(bot.rows[0].registrations_trigger)
+        if(bot.rows[0].registrations_trigger) {
+            const trigger = await pbService.sendTrigger(bot.rows[0].pb_token, candidate.rows[0].phone, bot.rows[0].registrations_trigger)
+            console.log('trigger')
+            console.log(trigger)
         }
+        
 
         return pbNewBuyer
     }
