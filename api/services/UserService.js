@@ -101,12 +101,8 @@ class UserService {
         const userData = {...body.formData, phone}
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
-        console.log('bot')
-        console.log(bot.rows[0])
 
         const pbNewBuyer = await pbService.buyerRegister(bot.rows[0].pb_token, userData)
-        console.log('pbNewBuyer')
-        console.log(pbNewBuyer)
 
         if(pbNewBuyer.is_registered) {
             const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3 RETURNING *',
@@ -115,15 +111,12 @@ class UserService {
             console.log(is_pb_user.rows[0])
         }
 
-        console.log('bot.registrations_trigger')
-        console.log(bot.rows[0].registrations_trigger)
         if(bot.rows[0].registrations_trigger) {
             const trigger = await pbService.sendTrigger(bot.rows[0].pb_token, candidate.rows[0].phone, bot.rows[0].registrations_trigger)
             console.log('trigger')
             console.log(trigger)
         }
         
-
         return pbNewBuyer
     }
 
@@ -140,13 +133,11 @@ class UserService {
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
         const phone = candidate.rows[0].phone
-        console.log(phone)
 
         const userData = {...body.formData, phone}
-        console.log(userData)
 
-        const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
-        const updatedBuyer = await pbService.updateBuyer(pb_api_token.rows[0].pb_token, userData)
+        const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        const updatedBuyer = await pbService.updateBuyer(bot.rows[0].pb_token, userData)
 
         return updatedBuyer
     }
