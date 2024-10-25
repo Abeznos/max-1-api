@@ -33,7 +33,7 @@ class PbService {
 
     async buyerInfo(token, phone) {
         try {
-            const response = await pb_api.post(`/buyer-info`,
+            const response = await pb_api.post(`/buyer-info-detail`,
                 {
                     identificator: phone
                 },
