@@ -29,9 +29,9 @@ class UserController {
         }
     }
 
-    async updateUserIportantDates(request, response) {
+    async updateUser(request, response) {
         try {
-            const newUser = await userService.updateUserIportantDates(request.body, request.headers)
+            const newUser = await userService.updateUser(request.body, request.headers)
             return response.status(200).json(newUser)
         } catch(error) {
             response.status(500).json(error.message)

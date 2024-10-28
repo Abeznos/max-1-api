@@ -120,7 +120,7 @@ class UserService {
         return pbNewBuyer
     }
 
-    async updateUserIportantDates(body, headers) {
+    async updateUser(body, headers) {
         console.log(body)
         const token = headers.authorization.split(' ')[1]
 
