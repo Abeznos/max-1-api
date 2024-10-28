@@ -1,6 +1,6 @@
 const db = require('../db')
 const axios = require('axios').default
-const https = require('node:https');
+const https = require('node:https')
 
 const pb_api = axios.create({
     httpsAgent: new https.Agent({ keepAlive: true, rejectUnauthorized: false }),
