@@ -81,7 +81,7 @@ class UserService {
 
         const appData = await appService.getAppData(botId)
 
-        return { ...buyerInfo, ...buyerOrderCode, appData: {...appData}}
+        return { pbUserData: { ...buyerInfo, ...buyerOrderCode }, appData: {...appData}}
         //return { ...buyerInfo, ...buyerOrderCode }
     }
 
