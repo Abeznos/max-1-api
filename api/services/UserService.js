@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 const QRCode = require('qrcode')
 
 const pbService = require('./PbService')
+const appService = require('./AppService')
 
 class UserService {
     //async findBotUser(data) {
@@ -78,6 +79,9 @@ class UserService {
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
         //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
 
+        const appData = await appService.getAppData(botId)
+
+        //return { pbUserData: {...buyerInfo, ...buyerOrderCode}, appData: {...appData}}
         return { ...buyerInfo, ...buyerOrderCode }
     }
 
