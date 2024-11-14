@@ -76,9 +76,9 @@ class UserService {
         const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
 
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-        const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
+        //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
 
-        return { ...buyerInfo, ...buyerOrderCode, qr: qr }
+        return { ...buyerInfo, ...buyerOrderCode }
     }
 
     async generateOrderCodeQr(code) {
