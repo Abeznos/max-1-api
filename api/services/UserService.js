@@ -81,8 +81,8 @@ class UserService {
 
         const appData = await appService.getAppData(botId)
 
-        //return { pbUserData: {...buyerInfo, ...buyerOrderCode}, appData: {...appData}}
-        return { ...buyerInfo, ...buyerOrderCode }
+        return { ...buyerInfo, ...buyerOrderCode, appData: {...appData}}
+        //return { ...buyerInfo, ...buyerOrderCode }
     }
 
     async generateOrderCodeQr(code) {
