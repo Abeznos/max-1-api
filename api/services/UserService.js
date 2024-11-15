@@ -69,11 +69,11 @@ class UserService {
         const appData = await appService.getAppData(botId)
         
         if(!candidate.rows[0] || !candidate.rows[0].phone) {
-            return { isBotUser: false, appData: {...appData} }
+            return { pbUserData: { isBotUser: false }, appData: {...appData} }
         }
 
         if(!candidate.rows[0].is_pb_user) {
-            return { isPbUser: false, appData: {...appData} }
+            return { pbUserData: { isPbUser: false }, appData: {...appData} }
         }
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
