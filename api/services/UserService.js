@@ -82,7 +82,9 @@ class UserService {
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
         //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
 
-        return { pbUserData: { ...buyerInfo, ...buyerOrderCode }, appData: {...appData}}
+        const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+
+        return { pbUserData: { ...buyerInfo, ...buyerOrderCode, referral_code: referalCode.referral_code }, appData: {...appData}}
         //return { ...buyerInfo, ...buyerOrderCode }
     }
 
