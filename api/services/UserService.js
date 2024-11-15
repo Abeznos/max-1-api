@@ -35,8 +35,9 @@ class UserService {
 
         if (candidate.rows[0]) {
             return candidate.rows[0].is_pb_user
+            console.log(candidate.rows[0])
         }
-
+        
         const userId = uuidv4()
         const date = new Date()
 
@@ -65,12 +66,14 @@ class UserService {
         const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
         [botId, chatId])
 
+        const appData = await appService.getAppData(botId)
+        
         if(!candidate.rows[0] || !candidate.rows[0].phone) {
-            return { isBotUser: false }
+            return { isBotUser: false, appData: {...appData} }
         }
 
         if(!candidate.rows[0].is_pb_user) {
-            return { isPbUser: false }
+            return { isPbUser: false, appData: {...appData} }
         }
 
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
@@ -78,8 +81,6 @@ class UserService {
 
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
         //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
-
-        const appData = await appService.getAppData(botId)
 
         return { pbUserData: { ...buyerInfo, ...buyerOrderCode }, appData: {...appData}}
         //return { ...buyerInfo, ...buyerOrderCode }
@@ -102,11 +103,12 @@ class UserService {
         [botId, chatId])
         const phone = candidate.rows[0].phone
 
-        const userData = {...body.formData, phone}
+        const userData = {...body.userData, phone}
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
 
         const pbNewBuyer = await pbService.buyerRegister(bot.rows[0].pb_token, userData)
+        console.log(pbNewBuyer)
 
         if(pbNewBuyer.is_registered) {
             const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3 RETURNING *',
@@ -138,7 +140,7 @@ class UserService {
         [botId, chatId])
         const phone = candidate.rows[0].phone
 
-        const userData = {...body.formData, phone}
+        const userData = {...body.userData, phone}
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const updatedBuyer = await pbService.updateBuyer(bot.rows[0].pb_token, userData)

@@ -83,17 +83,18 @@ class PbService {
     }
 
     async buyerRegister(token, user) {
-       try {
-           const response = await pb_api.post(`/buyer-register`, user,
-               {
-                   headers: {Authorization: token }
-               }
-           )
-           return response.data
-       } catch(error) {
-           console.log(error);
-           throw new Error('Ошибка при регистрации покупателя')
-       }
+        //console.log(user)
+        try {
+            const response = await pb_api.post(`/buyer-register`, user,
+                {
+                    headers: {Authorization: token }
+                }
+            )
+            return response.data
+        } catch(error) {
+            console.log(error);
+            throw new Error('Ошибка при регистрации покупателя')
+        }
     }
 
     async updateBuyer(token, user) {
