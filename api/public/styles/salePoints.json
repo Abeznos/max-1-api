@@ -1,0 +1,226 @@
+{
+    "registrationForm": {
+        "name": {
+            "name": "name",
+            "placeholder": "Имя",
+            "required": true
+        },
+        "gender": {
+            "options": [
+                {
+                    "value": "male",
+                    "label": "Мужской"
+                },
+                {
+                    "value": "female",
+                    "label": "Женский"
+                }
+            ],
+            "required": true
+        },
+        "birth_date": {
+            "placeholder": "Дата рождения",
+            "required": true
+        },
+        "email": {
+            "placeholder": "Email",
+            "required": true
+        },
+        "city_id": {
+            "cities": [
+                {
+                    "name": "Архангельск",
+                    "city_id": "617dc926-dc8d-c8fa-2dfa-338d3e141126"
+                },
+                {
+                    "name": "Воронеж",
+                    "city_id": "71119754-67a1-c719-fc7a-71e88c97ce60"
+                },
+                {
+                    "name": "Самара",
+                    "city_id": "c56bcb50-fbcc-ac9d-102e-3bb0678a2d56"
+                },
+                {
+                    "name": "Пенза",
+                    "city_id": "80f19902-ad0e-f86b-d80a-25f49f0a6364"
+                },
+                {
+                    "name": "Наберженые Челны",
+                    "city_id": "e80c56dc-f555-492d-d80e-d94f248b957c"
+                },
+                {
+                    "name": "Череповец",
+                    "city_id": "f7dcb3ee-3de4-1ff6-7aec-6a3fae0eb33c"
+                }
+            ],
+            "placeholder": "Где вы проживаете",
+            "required": true
+        },
+        "referral_code": {
+            "placeholder": "Промокод",
+            "required": false
+        }
+    },
+    "importantDates": {
+        "showSuggestion": true,
+        "suggestionText": "Заполните даты важных событий или дни рождения близких людей, и&nbsp;перед праздником мы&nbsp;пришлем вам напоминание и&nbsp;подарок.",
+        "headding": "Важные для вас даты",
+        "dateTitle": "Ребенок",
+        "namePlaceholder": "Имя ребенка",
+        "datePlaceholder": "Дата рождения"
+    },
+    "actionButtons": [
+        {
+            "type": "button",
+            "action": "mlm",
+            "icon": {
+                "type": "img",
+                "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/mlm-action-btn.svg",
+                "blendMode": "difference"
+            },
+            "severity": "contrast",
+            "label": "Пригласить друга"
+        },
+        {
+            "type": "router-link",
+            "to": "contacts",
+            "icon": {
+                "type": "img",
+                "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/address-action-btn.svg",
+                "blendMode": "difference"
+            },
+            "severity": "contrast",
+            "label": "Адреса и&nbsp;контакты"
+        },
+        {
+            "type": "router-link",
+            "to": "terms",
+            "icon": {
+                "type": "img",
+                "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/terms-action-btn.svg",
+                "blendMode": "difference"
+            },
+            "severity": "primary",
+            "label": "Условия и&nbsp;правила"
+        }
+    ],
+    "mainBanner": {
+        "link": "/",
+        "img": "https://img.freepik.com/free-vector/gradient-black-friday-concept_23-2148689670.jpg?semt=ais_hybrid"
+    },
+    "promotions": [
+        {
+            "link": "tri-po-cene-odnogo",
+            "img": "https://img.freepik.com/free-vector/gradient-black-friday-concept_23-2148689670.jpg"
+        }
+    ],
+    "salePoints": [
+        {
+            "name": "Архангельск",
+          	"link": "arkhangelsk",
+            "city": "Архангельск",
+            "address": "пр. Ленинградский 38, ТРЦ «Макси», 3 этаж",
+            "textContent": "<p>afafwfawf</p><p>[p[[[o[ijknqwe</p>",
+            "images": {
+            	"main": "https://st.biglion.ru/c/w/672/h/378/cfs25/deal_offer_photo/53/9f/539f3ab50221bb85e5c2f7938717c568.jpg",
+              	"galery": ["https://st.biglion.ru/c/w/672/h/378/cfs25/deal_offer_photo/53/9f/539f3ab50221bb85e5c2f7938717c568.jpg"]
+            },
+          	"menu": {
+              	"default": {
+                    "type": "button",
+                    "action": "mlm",
+                    "icon": {
+                      "type": "img",
+                      "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/mlm-action-btn.svg",
+                      "blendMode": "difference"
+                    },
+                    "severity": "contrast",
+                    "label": "Основное меню"                
+                },
+              	"bar": {
+                    "type": "button",
+                    "action": "mlm",
+                    "icon": {
+                      "type": "img",
+                      "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/mlm-action-btn.svg",
+                      "blendMode": "difference"
+                    },
+                    "severity": "contrast",
+                    "label": "Барное меню"                
+                },
+              	"childrens": {
+                    "type": "button",
+                    "action": "mlm",
+                    "icon": {
+                      "type": "img",
+                      "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/mlm-action-btn.svg",
+                      "blendMode": "difference"
+                    },
+                    "severity": "contrast",
+                    "label": "Детское меню"                
+                },              
+              	"seasons": {
+                    "type": "button",
+                    "action": "mlm",
+                    "icon": {
+                      "type": "img",
+                      "scr": "https://max-1-api.vercel.app/images/icons/b57f072e-5607-4da3-b3ff-a646c38d74b0/mlm-action-btn.svg",
+                      "blendMode": "difference"
+                    },
+                    "severity": "contrast",
+                    "label": "Сезонное меню"                
+                }
+            },
+            "promotions": {
+                
+            },
+            "contacts": {
+                "phone": "79998887766",
+                "email": "test@test.ru",
+                "site": "https://superland.ru",
+                "socialMedia": [
+                    {
+                        "name": "vk",
+                        "link": "https://vk.com/superland_59"
+                    }
+                ]
+            },
+            "workingHours": "10:00 – 21:00"
+        }
+    ],
+    "terms": {
+        "headding": "Условия программы",
+        "content": "<p>Бонусы за&nbsp;покупки в&nbsp;Суперленде! 🎉</p><p>1&nbsp;бонус = 1&nbsp;рубль 💰</p><p>Оплатить можно до&nbsp;20% от&nbsp;стоимости покупки! 🤩</p><p>Как это работает?</p><p> Входные билеты и&nbsp;сертификаты: скидка до&nbsp;20% 🎟</p><p> Блюда в&nbsp;кафе: скидка до&nbsp;10% 🍔</p><p> Бонусы не&nbsp;суммируются с&nbsp;другими акциями. 🚫</p><p>Кэшбек зависит от&nbsp;Вашего уровня в&nbsp;программе лояльности:</p><p> Юный герой 🦸‍♂️: 5%&nbsp;при регистрации 🎉</p><p> Супергерой 🦸: 7%&nbsp;при покупках на&nbsp;сумму от&nbsp;30&nbsp;000 рублей 💸</p><p> Легенда Суперленда 👑: 10% при покупках на&nbsp;сумму от&nbsp;60&nbsp;000 рублей 💸</p><p>Бонусы доступны к&nbsp;списанию со&nbsp;следующего дня после покупки. 💥</p><p>Срок действия бонусных баллов составляет 90&nbsp;дней. По&nbsp;истечении этого срока, бонусный счет обнулится. ⏳</p><p>Уровень участия в&nbsp;программе лояльности сохраняется. 🙂</p>"
+    },
+    "colors": {
+        "surfaceColor": "#ffffff",
+        "onSurfaceColor": "#2D50A2",
+        "primaryColor": "#2D50A2",
+        "onPrimaryColor": "#ffffff",
+        "primaryContainer": "#C0D1FD",
+        "onPrimaryContainer": "#2D50A2",
+        "secondaryColor": "#F0A262",
+        "onSecondaryColor": "#ffffff",
+        "secondaryContainer": "#f1f3f9",
+        "onSecondaryContainer": "#ffffff",
+        "accentColor": "",
+        "onAccentColor": "",
+        "neutraColor": "",
+        "onNeutraColor": ""
+    },
+    "buttonsStyles": {
+        "orderCode": {
+            "severity": "secondary",
+            "variant": "filled",
+            "icon": ""
+        },
+        "copyMlmCode": {
+            "severity": "primay",
+            "variant": "filled"
+        },
+        "closeOrderCodeModal": {
+            "severity": "primay",
+            "variant": "filled"
+        }
+    }
+}
