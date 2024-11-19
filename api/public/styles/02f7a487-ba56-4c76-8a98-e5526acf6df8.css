@@ -14,9 +14,3 @@
     --neutral-color: #ffffff;
     --on-neutral-color: #060a0a;;
 }
-
-@media (prefers-color-scheme: dark) {
-    :root {
-
-    }
-}
