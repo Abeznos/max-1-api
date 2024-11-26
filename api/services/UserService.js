@@ -64,8 +64,11 @@ class UserService {
         
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.phone)
+        //console.log(buyerInfo)
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.phone)
+        console.log(buyerOrderCode)
         const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.phone)
+        //console.log(referalCode)
 
         return { pbUserData: { ...buyerInfo, ...buyerOrderCode, referral_code: referalCode.referral_code }, appData: {...appData}}
 
