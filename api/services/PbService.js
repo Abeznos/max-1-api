@@ -13,23 +13,45 @@ pb_api.interceptors.request.use((config) => {
     return config
 })
 
+const sender_api = axios.create({
+    
+    withCredentials: true,
+    baseURL: process.env.SENDER_API,
+})
+
+sender_api.interceptors.request.use((config) => {
+    config.headers.Authorization = `Basic ${process.env.SENDER_API_TOKEN}`
+    config.headers["Content-Type"] = 'application/json'
+    return config
+})
+
 class PbService {
-    async checkUser(token, phone) {
+    //async checkUser(token, phone) {
+    //    try {
+    //        const response = await pb_api.post(`/buyer-info`,
+    //            {
+    //                identificator: phone
+    //            },
+    //            {
+    //                headers: {Authorization: token }
+    //            }
+    //        )
+    //        return response.data.is_registered
+    //    } catch(error) {
+    //        console.log(error);
+    //        throw new Error('Ошибка при получении информации о покупателе')
+    //    }
+    //}
+
+    async checkUser(botId, chatId) {
         try {
-            const response = await pb_api.post(`/buyer-info`,
-                {
-                    identificator: phone
-                },
-                {
-                    headers: {Authorization: token }
-                }
-            )
-            return response.data.is_registered
+            const response = await sender_api.get(`/client/app?chat_id=${chatId}&bot_id=${botId}`)
+            return response.data
         } catch(error) {
             console.log(error);
             throw new Error('Ошибка при получении информации о покупателе')
         }
-    }
+    }    
 
     async buyerInfo(token, phone) {
         try {

@@ -6,19 +6,6 @@ const pbService = require('./PbService')
 const appService = require('./AppService')
 
 class UserService {
-    //async findBotUser(data) {
-    //    const { chatId, botId } = data
-//
-    //    const user = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-    //    [botId, chatId])
-//
-    //    if(!user.rows[0]) {
-    //        return await this.createBotUser(data)
-    //    } else {
-    //        return user.rows[0]
-    //    }
-    //}
-
     async createBotUser(body, headers) {
         console.log(body)
 
@@ -63,29 +50,48 @@ class UserService {
         }
         const { botId, chatId } = body
 
-        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-        [botId, chatId])
-
         const appData = await appService.getAppData(botId)
-        
-        if(!candidate.rows[0] || !candidate.rows[0].phone) {
+        console.log(appData)
+
+        console.log(botId, chatId)
+//
+        const candidate = await pbService.checkUser(botId, chatId)
+        console.log(candidate)
+
+        if (!candidate) {
             return { pbUserData: { isBotUser: false }, appData: {...appData} }
         }
-
-        if(!candidate.rows[0].is_pb_user) {
-            return { pbUserData: { isPbUser: false }, appData: {...appData} }
-        }
-
+        
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
-        const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-
-        const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
-        //const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
-
-        const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.phone)
+        const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.phone)
+        const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.phone)
 
         return { pbUserData: { ...buyerInfo, ...buyerOrderCode, referral_code: referalCode.referral_code }, appData: {...appData}}
-        //return { ...buyerInfo, ...buyerOrderCode }
+
+        //const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
+        //[botId, chatId])
+//
+        //const appData = await appService.getAppData(botId)
+        //
+        //if(!candidate.rows[0] || !candidate.rows[0].phone) {
+        //    return { pbUserData: { isBotUser: false }, appData: {...appData} }
+        //}
+//
+        //if(!candidate.rows[0].is_pb_user) {
+        //    return { pbUserData: { isPbUser: false }, appData: {...appData} }
+        //}
+        //const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
+        //const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+//
+//
+        //const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+        ////const qr = await this.generateOrderCodeQr(buyerOrderCode.order_code)
+//
+        //const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.rows[0].phone)
+//
+        //return { pbUserData: { ...buyerInfo, ...buyerOrderCode, referral_code: referalCode.referral_code }, appData: {...appData}}
+        
     }
 
     async generateOrderCodeQr(code) {
