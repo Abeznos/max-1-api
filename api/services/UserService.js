@@ -51,24 +51,22 @@ class UserService {
         const { botId, chatId } = body
 
         const appData = await appService.getAppData(botId)
-        console.log(appData)
 
-        console.log(botId, chatId)
-//
         const candidate = await pbService.checkUser(botId, chatId)
-        console.log(candidate)
 
         if (!candidate) {
             return { pbUserData: { isBotUser: false }, appData: {...appData} }
         }
-        
+
         const pb_api_token = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const buyerInfo = await pbService.buyerInfo(pb_api_token.rows[0].pb_token, candidate.phone)
-        //console.log(buyerInfo)
+
+        if (!buyerInfo.is_registered || !buyerInfo.success) {
+            return { pbUserData: { isPbUser: false }, appData: {...appData} }
+        }
+        
         const buyerOrderCode = await pbService.buyerOrderCode(pb_api_token.rows[0].pb_token, candidate.phone)
-        console.log(buyerOrderCode)
         const referalCode = await pbService.getMlmCOde(pb_api_token.rows[0].pb_token, candidate.phone)
-        //console.log(referalCode)
 
         return { pbUserData: { ...buyerInfo, ...buyerOrderCode, referral_code: referalCode.referral_code }, appData: {...appData}}
 
@@ -110,28 +108,27 @@ class UserService {
 
         const { botId, chatId } = body
 
-        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-        [botId, chatId])
-        const phone = candidate.rows[0].phone
+        const candidate = await pbService.checkUser(botId, chatId)
+
+        const phone = candidate.phone
 
         const userData = {...body.userData, phone}
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
-
+    
         const pbNewBuyer = await pbService.buyerRegister(bot.rows[0].pb_token, userData)
         console.log(pbNewBuyer)
 
-        if(pbNewBuyer.is_registered) {
-            const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3 RETURNING *',
-            [true, botId, chatId])
-            console.log('is_pb_user')
-            console.log(is_pb_user.rows[0])
-        }
+        //if(pbNewBuyer.is_registered) {
+        //    const is_pb_user = await db.query('UPDATE bot_users SET is_pb_user = $1 WHERE bot_id = $2 AND chat_id = $3 RETURNING *',
+        //    [true, botId, chatId])
+        //    console.log('is_pb_user')
+        //    console.log(is_pb_user.rows[0])
+        //}
 
         if(bot.rows[0].registrations_trigger) {
-            const trigger = await pbService.sendTrigger(bot.rows[0].pb_token, candidate.rows[0].phone, bot.rows[0].registrations_trigger)
-            console.log('trigger')
-            console.log(trigger)
+            const trigger = await pbService.sendTrigger(bot.rows[0].pb_token, candidate.phone, bot.rows[0].registrations_trigger)
+            console.log('trigger', trigger)
         }
         
         return pbNewBuyer
@@ -147,9 +144,8 @@ class UserService {
 
         const { botId, chatId } = body
 
-        const candidate = await db.query('SELECT * FROM bot_users WHERE bot_id = $1 AND chat_id = $2',
-        [botId, chatId])
-        const phone = candidate.rows[0].phone
+        const candidate = await pbService.checkUser(botId, chatId)
+        const phone = candidate.phone
 
         const userData = {...body.userData, phone}
 
