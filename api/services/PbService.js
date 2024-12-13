@@ -48,7 +48,7 @@ class PbService {
             const response = await sender_api.get(`/client/app?chat_id=${chatId}&bot_id=${botId}`)
             return response.data
         } catch(error) {
-            console.log(error);
+            console.log(error)
             throw new Error('Ошибка при получении информации о покупателе')
         }
     }    
