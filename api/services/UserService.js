@@ -152,6 +152,13 @@ class UserService {
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
         const updatedBuyer = await pbService.updateBuyer(bot.rows[0].pb_token, userData)
 
+        if (body.formName === 'importantDates') {
+            if (bot.rows[0].triggers.includes(body.formName)) {
+                const sendTrigger = await pbService.sendTrigger(bot.rows[0].pb_token, phone, body.formName)
+                console.log('sendTrigger', sendTrigger)
+            }
+        }
+        
         return updatedBuyer
     }
 }
