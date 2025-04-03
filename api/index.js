@@ -12,7 +12,7 @@ const app = express()
 app.use(cors(
   {
       credentials: true,
-      origin: [process.env.CLIENT_URL, process.env.DEV_URL],
+      origin: [process.env.CLIENT_URL, process.env.DEV_URL, process.env.PRE_PROD],
       sameSite: 'none'
   }
 ))
