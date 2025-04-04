@@ -1,0 +1,22 @@
+:root {
+    --surface-color: #f1f3f9;
+    --on-surface-color: #060a0a;
+    --primary-color: #EA4A61;
+    --on-primary-color: #f1f3f9;
+    --primary-container: #fce4ec;
+    --on-primary-container: #060a0a;
+    --secondary-color: #fce4ec;
+    --on-secondary-color: #060a0a;
+    --secondary-container: #ffffff;
+    --on-secondary-container: #060a0a;
+    --accent-color: ;
+    --on-accent-color: ;
+    --neutral-color: #ffffff;
+    --on-neutral-color: #060a0a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+  
+    }
+}
