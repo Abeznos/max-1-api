@@ -1,10 +1,10 @@
 :root {
-    --surface-color: #f1f3f9;
-    --on-surface-color: #060a0a;
-    --primary-color: #EA4A61;
-    --on-primary-color: #f1f3f9;
-    --primary-container: #fce4ec;
-    --on-primary-container: #060a0a;
+    --surface-color: #ffffff;
+    --on-surface-color: #15191E;
+    --primary-color: #15191E;
+    --on-primary-color: #ffffff;
+    --primary-container: #E2E2E0;
+    --on-primary-container: #15191E;
     --secondary-color: #fce4ec;
     --on-secondary-color: #060a0a;
     --secondary-container: #ffffff;
