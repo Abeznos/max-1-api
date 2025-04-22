@@ -9,13 +9,13 @@ const bodyParser = require('body-parser')
 const path = require('path')
 
 const app = express()
-//app.use(cors(
-//  {
-//      credentials: true,
-//      origin: [process.env.CLIENT_URL, process.env.DEV_URL, process.env.PRE_PROD],
-//      sameSite: 'none'
-//  }
-//))
+app.use(cors(
+  {
+      credentials: false,
+      origin: '*',
+      sameSite: 'none'
+  }
+))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 
