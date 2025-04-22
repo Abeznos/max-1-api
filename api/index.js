@@ -11,8 +11,8 @@ const path = require('path')
 const app = express()
 app.use(cors(
   {
-      credentials: false,
-      origin: '*',
+      credentials: true,
+      origin: [process.env.CLIENT_URL, process.env.DEV_URL, process.env.PRE_PROD],
       sameSite: 'none'
   }
 ))
