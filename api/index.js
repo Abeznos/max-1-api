@@ -13,6 +13,7 @@ app.use(cors(
   {
       credentials: true,
       origin: [process.env.CLIENT_URL, process.env.DEV_URL, process.env.PRE_PROD, process.env.FLUTTER],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       sameSite: 'none'
   }
 ))
