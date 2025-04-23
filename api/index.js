@@ -9,14 +9,24 @@ const bodyParser = require('body-parser')
 const path = require('path')
 
 const app = express()
-app.use(cors(
-  {
-      credentials: true,
-      origin: [process.env.CLIENT_URL, process.env.DEV_URL, process.env.PRE_PROD, process.env.FLUTTER],
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      sameSite: 'none'
-  }
-))
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.DEV_URL,
+  process.env.PRE_PROD,
+  process.env.FLUTTER,
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
