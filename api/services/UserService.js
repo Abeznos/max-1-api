@@ -110,10 +110,12 @@ class UserService {
 
         const candidate = await pbService.checkUser(botId, chatId)
 
-        const phone = candidate.phone
-        const registration_point = candidate.registration_sale_point_id
+        const { phone, registration_point } = candidate
+        const userData = { ...body.userData, phone }
 
-        const userData = {...body.userData, phone, registration_point}
+        if (registration_point) {
+            userData.registration_point = registration_point
+        }
 
         const bot = await db.query('SELECT * FROM bots WHERE bot_id = $1', [botId])
     
