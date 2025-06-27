@@ -54,7 +54,7 @@ class UserService {
 
         const candidate = await pbService.checkUser(botId, chatId)
 
-        if (!candidate) {
+        if (!candidate.success) {
             return { pbUserData: { isBotUser: false }, appData: {...appData} }
         }
 
