@@ -9,11 +9,14 @@ const bodyParser = require('body-parser')
 const path = require('path')
 
 const app = express()
+const flutterUrls = process.env.FLUTTER_URLS.split(',').map(url => url.trim());
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.DEV_URL,
   process.env.PRE_PROD,
   process.env.FLUTTER,
+  ...flutterUrls
+
 ];
 
 app.use(cors({
